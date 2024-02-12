@@ -861,9 +861,14 @@ return (function () {
                 }
             }
             forEach(findAll(fragment, '[hx-swap-oob], [data-hx-swap-oob]'), function (oobElement) {
-                var oobValue = getAttributeValue(oobElement, "hx-swap-oob");
-                if (oobValue != null) {
-                    oobSwap(oobValue, oobElement, settleInfo);
+                if (htmx.config.allowNestedOobSwaps || oobElement.parentElement.nodeName === "BODY") {
+                    var oobValue = getAttributeValue(oobElement, "hx-swap-oob");
+                    if (oobValue != null) {
+                        oobSwap(oobValue, oobElement, settleInfo);
+                    }
+                } else {
+                    oobElement.removeAttribute('hx-swap-oob');
+                    oobElement.removeAttribute('data-hx-swap-oob');
                 }
             });
         }
